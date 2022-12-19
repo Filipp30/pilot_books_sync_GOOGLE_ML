@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Models;
+namespace App\Repository\Dto;
 
-class UserRegistrationModel
+class UserRegistrationDto
 {
     private string $name;
     private string $email;
@@ -19,6 +19,16 @@ class UserRegistrationModel
         $this->email = $email;
         $this->phoneNumber = $phoneNumber;
         $this->password = $password;
+    }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            $data['name'],
+            $data['email'],
+            $data['phone_number'],
+            $data['password']
+        );
     }
 
     public function getName(): string

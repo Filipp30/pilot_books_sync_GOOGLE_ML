@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRegistrationRequest;
-use App\Repository\Models\UserRegistrationModel;
+use App\Repository\Dto\UserRegistrationDto;
 use App\Repository\Services\UserRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
@@ -16,8 +16,8 @@ class RegistrationController extends Controller
         $validated = $request->validated();
 
         if ($validated) {
-            $user = new UserRegistrationModel($validated['name'], $validated['email'], $validated['phone_number'], $validated['password']);
-            $user = UserRepository::createUser($user);
+            $dto = UserRegistrationDto::fromArray($validated);
+            $user = UserRepository::createUser($dto);
             event(new Registered($user));
         }
 
