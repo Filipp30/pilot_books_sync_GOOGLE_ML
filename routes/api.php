@@ -1,19 +1,29 @@
 <?php
 
+use App\Http\Middleware\TenantHeader;
+use App\Models\UlmBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+require_once "auth-api.php";
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => [
+    'auth:sanctum',
+    TenantHeader::class,
+    InitializeTenancyByRequestData::class,
+    ]], function () {
+
+    Route::get('/user', function (Request $request) {
+        $ulmBook = UlmBook::all();
+
+        return response([
+            'book' => $ulmBook
+        ], 200);
+    });
+});
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found. If error persists, contact filipp-tts@outlook.com'], 404);
 });

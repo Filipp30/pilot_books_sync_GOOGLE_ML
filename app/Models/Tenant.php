@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+use Stancl\Tenancy\Contracts\TenantWithDatabase;
+use Stancl\Tenancy\Database\Concerns\HasDatabase;
+
+class Tenant extends BaseTenant implements TenantWithDatabase
+{
+    use HasDatabase;
+
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id',
+            'user_id',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->BelongsTo(User::class, 'user_id', 'id');
+    }
+}
