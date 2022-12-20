@@ -16,7 +16,7 @@ class TenantHeader
             ], 404);
         }
 
-        if (!($request->user()->tenant()->getResults()->id instanceof Tenant)) {
+        if (!($request->user()->tenant()->getResults() instanceof Tenant)) {
             abort(500, 'Tenant instance invalid');
         }
 

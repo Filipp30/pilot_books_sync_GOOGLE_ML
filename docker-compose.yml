@@ -12,3 +12,7 @@ services:
             MYSQL_ROOT_PASSWORD: laravel
             MYSQL_DATABASE: laravel
 
+    redis:
+        image: redis
+        ports:
+            -   "6379:6379"

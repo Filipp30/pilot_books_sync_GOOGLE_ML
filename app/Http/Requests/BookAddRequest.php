@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enums\AircraftTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class AuthLoginRequest extends FormRequest
+class BookAddRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,8 +16,8 @@ class AuthLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:35'],
-            'password' => ['required', 'string','min:6'],
+            'document_url' => ['required', 'url'],
+            'type' => Rule::in(AircraftTypes::values()),
         ];
     }
 }

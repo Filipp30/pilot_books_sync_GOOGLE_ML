@@ -1,12 +1,20 @@
 <?php
 
+use App\Http\Controllers\Book\PilotBookController;
 use App\Http\Middleware\TenantHeader;
-use App\Models\UlmBook;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
 require_once "auth-api.php";
+
+/**
+ * Tenant routes.
+ *
+ * Each user is related to one Tenant. (User = Tenant)
+ * After user authentication an X-Tenant header should be added with tenant-id that relate the request to right database.
+ * Middleware order priority is defined in TenancyServiceProvider.php
+ *
+ */
 
 Route::group(['middleware' => [
     'auth:sanctum',
@@ -14,13 +22,7 @@ Route::group(['middleware' => [
     InitializeTenancyByRequestData::class,
     ]], function () {
 
-    Route::get('/user', function (Request $request) {
-        $ulmBook = UlmBook::all();
-
-        return response([
-            'book' => $ulmBook
-        ], 200);
-    });
+    Route::post('/book/add', [PilotBookController::class, 'add']);
 });
 
 Route::fallback(function(){
