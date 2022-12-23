@@ -2,15 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class UlmBook extends Model
 {
-    use HasUuids;
-
     protected $table = 'ulm_book';
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'date',
@@ -37,5 +33,6 @@ class UlmBook extends Model
         'fstd_session_type',
         'fstd_session_total_time',
         'remarks_and_endorsements',
+        'errors',
     ];
 }

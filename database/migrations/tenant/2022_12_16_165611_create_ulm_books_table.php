@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ulm_book', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('date')->nullable();
+            $table->id();
+            $table->string('date')->nullable(false);
             $table->string('departure_place')->nullable();
             $table->string('departure_time')->nullable();
             $table->string('arrival_place')->nullable();
-            $table->string('arrival_time')->nullable();
+            $table->string('arrival_time')->nullable(false);
             $table->string('aircraft_model')->nullable();
             $table->string('aircraft_registration')->nullable();
             $table->string('single_pilot_time_se')->nullable();
@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('fstd_session_type')->nullable();
             $table->string('fstd_session_total_time')->nullable();
             $table->string('remarks_and_endorsements')->nullable();
+            $table->json('errors')->nullable();
             $table->timestamps();
         });
     }

@@ -64,6 +64,10 @@ class Handler extends ExceptionHandler
             ], 500);
         }
 
+        if ($e instanceof ProcessingPilotbookJobException) {
+            dd('job exception', $e->getExec(), $e->getMessage());
+        }
+
         return parent::render($request, $e);
     }
 }

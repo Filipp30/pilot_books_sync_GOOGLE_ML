@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookAddRequest;
-use App\Services\GoogleCloud\DocumentAiService;
-use Illuminate\Http\Request;
+use App\Jobs\ProcessPilotbookJob;
+use App\Models\Enums\BookTypes;
+use Illuminate\Http\File;
 use Illuminate\Http\Response;
 
 class PilotBookController extends Controller
 {
-    public function add(BookAddRequest $request, DocumentAiService $aiService): Response
+    public function add(BookAddRequest $request): Response
     {
         $validated = $request->validated();
 
-        $result = $aiService->handlePilotBookDocument();
-        dd($result);
+        // TODO: Check if document is valid before dispatch a job
+        $pdf = new File('/Users/dev/Desktop/_/pilot_books_sync/app/Services/GoogleCloud/pilot_book.pdf');
 
-        //TODO: save data for the given type ULM - PPL
-        //TODO: create repository for each type
+        ProcessPilotbookJob::dispatchSync(BookTypes::ULM(), null);
 
         return response([
             'message'=>'Your document will be handled. You receive notification when finish.'

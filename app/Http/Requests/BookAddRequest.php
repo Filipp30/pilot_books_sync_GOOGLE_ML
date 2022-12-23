@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Enums\AircraftTypes;
+use App\Models\Enums\BookTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,7 +17,7 @@ class BookAddRequest extends FormRequest
     {
         return [
             'document_url' => ['required', 'url'],
-            'type' => Rule::in(AircraftTypes::values()),
+            'type' => Rule::in(BookTypes::values()),
         ];
     }
 }

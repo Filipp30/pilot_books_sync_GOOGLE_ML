@@ -10,7 +10,7 @@ interface DocumentHandlerContract
 {
     /**
      * @param File $pdf
-     * @return  Collection<PilotBookRowDto>
+     * @return  array<PilotBookRowDto>
      */
-    public function handlePilotBookDocument(File $pdf): Collection;
+    public function handlePilotBookDocument(File $pdf): array;
 }

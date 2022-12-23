@@ -9,7 +9,7 @@ use Rexlabs\Enum\Enum;
  * @method static self PPL()
  */
 
-class AircraftTypes extends Enum
+class BookTypes extends Enum
 {
     const ULM = 'ULM';
     const PPL = 'PPL';
