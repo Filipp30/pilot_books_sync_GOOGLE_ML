@@ -24,8 +24,3 @@ Route::group(['middleware' => [
 
     Route::post('/book/add', [PilotBookController::class, 'add']);
 });
-
-Route::fallback(function(){
-    return response()->json([
-        'message' => 'Page Not Found. If error persists, contact filipp-tts@outlook.com'], 404);
-});

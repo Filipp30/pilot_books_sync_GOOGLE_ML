@@ -8,17 +8,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LoginController extends Controller
 {
     public function login(AuthLoginRequest $request): Response
     {
-        $user = User::query()->where('email', '=', $request['email'])->first();
+        $validated = $request->validated();
 
-        if (!($user instanceof User) || !Hash::check($request['password'], $user->password)) {
-            return response([
-                'message'=>'The provided credentials are incorrect.'
-            ],401);
+        $user = User::query()->where('email', '=', $validated['email'])->first();
+
+        if (!Hash::check($validated['password'], $user->password)) {
+            throw new NotFoundHttpException();
         }
 
         return response([

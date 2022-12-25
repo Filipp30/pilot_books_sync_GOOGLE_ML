@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,24 +52,42 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): JsonResponse
     {
-        if ($e instanceof ModelNotFoundException) {
+        if ($e instanceof ValidationException) {
             return response()->json([
-                'error' => 'Entry for ' . str_replace('App\\Models\\', '', $e->getModel()).' not found'
+                'message' => 'Validation fails.',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        if ($e instanceof AuthenticationException) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+
+        if ($e instanceof EmailMustBeVerifiedException) {
+            return response()->json([
+                'message' => 'Email must be verified.'
+            ], 403);
+        }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response()->json([
+                'message' => 'NotFoundException (credentials are probably incorrect).'
             ], 404);
         }
 
-        if ($e instanceof HttpException) {
+        if ($e instanceof TenantException) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'message' => 'Tenant is not found or is invalid. Contact development team: filipp-tts@outlook.com.'
             ], 500);
         }
 
-        if ($e instanceof ProcessingPilotbookJobException) {
-            dd('job exception', $e->getExec(), $e->getMessage());
-        }
-
-        return parent::render($request, $e);
+        return response()->json([
+            'message' => 'Server error. Contact development team: filipp-tts@outlook.com.',
+            'error' => parent::render($request, $e)
+        ], 500);
     }
 }

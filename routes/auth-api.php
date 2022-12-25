@@ -2,14 +2,14 @@
 
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Middleware\UserEmailIsVerified;
+use App\Http\Middleware\UserBeforeLoginChecks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegistrationController;
 
 ### AUTH: Authentication and Authorization ###
     Route::post('/auth/registration',[RegistrationController::class,'registration']);
-    Route::post('/auth/login',[LoginController::class,'login'])->middleware([UserEmailIsVerified::class]);
+    Route::post('/auth/login',[LoginController::class,'login'])->middleware([UserBeforeLoginChecks::class]);
     Route::get('/auth/logout',[LoginController::class,'logout'])->middleware('auth:sanctum');
     Route::get('/auth/user', function (Request $request){
         return response([

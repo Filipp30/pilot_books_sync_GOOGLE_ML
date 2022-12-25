@@ -15,17 +15,12 @@ class RegistrationController extends Controller
     {
         $validated = $request->validated();
 
-        if ($validated) {
-            $dto = UserRegistrationDto::fromArray($validated);
-            $user = UserRepository::createUser($dto);
-            event(new Registered($user));
-        }
+        $dto = UserRegistrationDto::fromArray($validated);
+        $user = UserRepository::createUser($dto);
+        event(new Registered($user));
 
         return response([
-            'message' => 'Registration successfully.',
-            'email' => 'Must verify your email before you can login!',
-            'user_name' => $user->name,
-            'user_email' => $user->email,
+            'message' => 'Registration successfully. Must verify your email before you can login!',
         ], 200);
     }
 }

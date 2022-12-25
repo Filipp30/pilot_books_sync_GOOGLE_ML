@@ -13,13 +13,11 @@ class EmailVerificationController extends Controller
     public function emailVerify(Request $request): Response
     {
         $user = User::findOrFail($request->id);
-        $email_is_verified = $user->markEmailAsVerified();
-
+        $user->markEmailAsVerified();
         UserIsVerified::dispatch($user->id);
 
         return response([
             'message' => 'Email is verified successfully.',
-            'verified' => $email_is_verified,
         ], 200);
     }
 
