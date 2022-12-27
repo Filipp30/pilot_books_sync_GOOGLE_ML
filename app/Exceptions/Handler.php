@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -76,6 +77,12 @@ class Handler extends ExceptionHandler
         if ($e instanceof NotFoundHttpException) {
             return response()->json([
                 'message' => 'NotFoundException (credentials are probably incorrect).'
+            ], 404);
+        }
+
+        if ($e instanceof ModelNotFoundException) {
+            return response()->json([
+                'message' => 'Given credentials are probably incorrect.'
             ], 404);
         }
 
