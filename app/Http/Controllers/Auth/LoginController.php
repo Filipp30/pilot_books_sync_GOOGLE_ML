@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LoginController extends Controller
 {
-    public function login(AuthLoginRequest $request): Response
+    public function login(AuthLoginRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -22,18 +22,18 @@ class LoginController extends Controller
             throw new NotFoundHttpException();
         }
 
-        return response([
+        return response()->json([
             'token' => $user->createToken('jwt_token')->plainTextToken
-        ], 200);
+        ]);
     }
 
-    public function logout(Request $request): Response
+    public function logout(Request $request): JsonResponse
     {
         $user = $request->user();
         $user->tokens()->delete();
 
-        return response([
+        return response()->json([
             'message'=>'logout successfully'
-        ],200);
+        ]);
     }
 }

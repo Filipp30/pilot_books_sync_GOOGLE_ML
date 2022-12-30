@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -74,6 +75,13 @@ class Handler extends ExceptionHandler
             ], 403);
         }
 
+        if ($e instanceof TenantException) {
+            return response()->json([
+                'message' => 'Tenant is not found or is invalid. Contact development team: filipp-tts@outlook.com.'
+            ], 500);
+        }
+
+        // TODO: need to filter this errors
         if ($e instanceof NotFoundHttpException) {
             return response()->json([
                 'message' => 'NotFoundException (credentials are probably incorrect).'
@@ -84,12 +92,6 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => 'Given credentials are probably incorrect.'
             ], 404);
-        }
-
-        if ($e instanceof TenantException) {
-            return response()->json([
-                'message' => 'Tenant is not found or is invalid. Contact development team: filipp-tts@outlook.com.'
-            ], 500);
         }
 
         return response()->json([

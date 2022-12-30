@@ -23,4 +23,5 @@ Route::group(['middleware' => [
     ]], function () {
 
     Route::post('/book/add', [PilotBookController::class, 'add']);
+    Route::get('/book/get-all', [PilotBookController::class, 'getAll']);
 });

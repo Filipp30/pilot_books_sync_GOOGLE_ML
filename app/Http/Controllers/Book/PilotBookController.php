@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookAddRequest;
+use App\Http\Requests\BookGetRequest;
 use App\Jobs\ProcessPilotbookJob;
 use App\Models\Enums\BookTypes;
+use App\Repository\Services\UlmBookRepository;
 use Illuminate\Http\File;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class PilotBookController extends Controller
@@ -23,5 +26,16 @@ class PilotBookController extends Controller
         return response([
             'message'=>'Your document will be handled. You receive notification when finish.'
         ],200);
+    }
+
+    public function getAll(BookGetRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $data = UlmBookRepository::getAll(BookTypes::instanceFromKey($validated['type']));
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Repository\Services;
 
+use App\Models\Enums\BookTypes;
 use App\Models\Enums\PilotBookFields;
 use App\Models\UlmBook;
 use App\Repository\Dto\PilotBookRowDto;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 
 class UlmBookRepository
@@ -34,6 +36,23 @@ class UlmBookRepository
             ->map(fn ($group) => $group->sortBy(fn(PilotBookRowDto $dto) => $dto->getArrivalTime()))
             ->collapse()
             ->last();
+    }
+
+    /**
+     * @return Collection<PilotBookRowDto> $collection
+     */
+    static public function getAll(BookTypes $type): Collection
+    {
+        if ($type->is(BookTypes::ULM())) {
+            return UlmBook::all()
+                ->groupBy('date')
+                ->map(fn ($group) => $group->sortBy(fn($group) => $group['arrival_time']))
+                ->sortBy('date')
+                ->collapse()
+                ->map(fn(UlmBook $record): PilotBookRowDto => PilotBookRowDto::fromDomain($record));
+        }
+
+        throw new ModelNotFoundException();
     }
 
     static private function save(PilotBookRowDto $dto): void

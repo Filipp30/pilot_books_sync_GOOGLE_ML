@@ -7,11 +7,11 @@ use App\Http\Requests\AuthRegistrationRequest;
 use App\Repository\Dto\UserRegistrationDto;
 use App\Repository\Services\UserRepository;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class RegistrationController extends Controller
 {
-    public function registration(AuthRegistrationRequest $request): Response
+    public function registration(AuthRegistrationRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -19,8 +19,8 @@ class RegistrationController extends Controller
         $user = UserRepository::createUser($dto);
         event(new Registered($user));
 
-        return response([
+        return response()->json([
             'message' => 'Registration successfully. Must verify your email before you can login!',
-        ], 200);
+        ]);
     }
 }
