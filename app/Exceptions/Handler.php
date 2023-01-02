@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -81,16 +80,10 @@ class Handler extends ExceptionHandler
             ], 500);
         }
 
-        // TODO: need to filter this errors
-        if ($e instanceof NotFoundHttpException) {
+        // ### If given credentials are incorrect (email: ModelNotFoundException, password: NotFoundHttpException ### //
+        if (($e instanceof NotFoundHttpException) || ($e instanceof ModelNotFoundException)) {
             return response()->json([
-                'message' => 'NotFoundException (credentials are probably incorrect).'
-            ], 404);
-        }
-
-        if ($e instanceof ModelNotFoundException) {
-            return response()->json([
-                'message' => 'Given credentials are probably incorrect.'
+                'message' => 'NotFoundException (credentials are probably incorrect). Route not found'
             ], 404);
         }
 
