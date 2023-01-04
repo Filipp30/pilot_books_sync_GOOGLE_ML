@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class UlmBook extends Model
 {
+    use HasUuids;
+
     protected $table = 'ulm_book';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'date',

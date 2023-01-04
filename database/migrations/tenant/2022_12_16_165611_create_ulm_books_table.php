@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ulm_book', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('date')->nullable(false);
             $table->string('departure_place')->nullable();
             $table->string('departure_time')->nullable();

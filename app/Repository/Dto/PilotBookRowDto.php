@@ -10,6 +10,7 @@ use DateTime;
 
 class PilotBookRowDto
 {
+    public ?string $id;
     public ?string $text;
     public ?string $date;
     public ?string $departurePlace;
@@ -21,6 +22,7 @@ class PilotBookRowDto
     public ?array $errors;
 
     public function __construct(
+        ?string $id,
         ?string $text,
         ?DateTime $date,
         ?Aerodromes $departurePlace,
@@ -31,6 +33,7 @@ class PilotBookRowDto
         ?string $aircraftRegistration,
         array $errors = []
     ) {
+        $this->id = $id;
         $this->text = $text;
         $this->date = $date?->format('d-m-Y');
         $this->departurePlace = $departurePlace?->value();
@@ -45,6 +48,7 @@ class PilotBookRowDto
     public static function fromArray(array $data): self
     {
         return new self(
+            null,
             $data['text'] ?? null,
             $data[PilotBookFields::DATE],
             $data[PilotBookFields::DEPARTURE_PLACE],
@@ -60,6 +64,7 @@ class PilotBookRowDto
     public static function fromDomain(UlmBook $ulmBook): self
     {
         return new self(
+            $ulmBook['id'],
             null,
             DateTime::createFromFormat('d-m-Y', $ulmBook[PilotBookFields::DATE]),
             $ulmBook[PilotBookFields::DEPARTURE_PLACE] === null ? null : Aerodromes::tryFrom($ulmBook[PilotBookFields::DEPARTURE_PLACE]),
