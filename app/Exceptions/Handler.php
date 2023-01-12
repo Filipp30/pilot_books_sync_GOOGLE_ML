@@ -94,11 +94,11 @@ class Handler extends ExceptionHandler
             ], 500);
         }
 
-//        return response()->json([
-//            'message' => 'Server error. Contact development team: filipp-tts@outlook.com.',
-//            'error' => parent::render($request, $e)
-//        ], 500);
+        return response()->json([
+            'message' => 'Server error. Contact development team: filipp-tts@outlook.com.',
+            'error' => parent::render($request, $e)
+        ], 500);
 
-        return parent::render($request, $e);
+//        return parent::render($request, $e);
     }
 }
