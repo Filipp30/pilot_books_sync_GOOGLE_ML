@@ -3,14 +3,14 @@
 namespace App\Services\Contracts;
 
 use App\Repository\Dto\PilotBookRowDto;
-use Illuminate\Http\File;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 
 interface DocumentHandlerContract
 {
     /**
-     * @param File $pdf
-     * @return  array<PilotBookRowDto>
+     * @param UploadedFile $file
+     * @return Collection<PilotBookRowDto>
      */
-    public function handlePilotBookDocument(File $pdf): array;
+    public function handle(UploadedFile $file): Collection;
 }

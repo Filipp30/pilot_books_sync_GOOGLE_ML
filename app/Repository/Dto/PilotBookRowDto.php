@@ -19,6 +19,8 @@ class PilotBookRowDto
     public ?string $arrivalTime;
     public ?string $aircraftModel;
     public ?string $aircraftRegistration;
+    public ?string $totalTimeOfFlight;
+    public ?string $namePic;
     public ?array $errors;
 
     public function __construct(
@@ -31,6 +33,8 @@ class PilotBookRowDto
         ?Carbon $arrivalTime,
         ?string $aircraftModel,
         ?string $aircraftRegistration,
+        ?Carbon $totalTimeOfFlight,
+        ?string $namePic,
         array $errors = []
     ) {
         $this->id = $id;
@@ -42,6 +46,8 @@ class PilotBookRowDto
         $this->arrivalTime = $arrivalTime?->format('H:i');
         $this->aircraftModel = $aircraftModel;
         $this->aircraftRegistration = $aircraftRegistration;
+        $this->totalTimeOfFlight = $totalTimeOfFlight?->format('H:i');
+        $this->namePic = $namePic;
         $this->errors = $errors;
     }
 
@@ -57,6 +63,8 @@ class PilotBookRowDto
             $data[PilotBookFields::ARRIVAL_TIME],
             $data[PilotBookFields::AIRCRAFT_MODEL],
             $data[PilotBookFields::DEPARTURE_PLACE],
+            $data[PilotBookFields::TOTAL_TIME_OF_FLIGHT],
+            $data[PilotBookFields::NAME_PIC],
             $data['errors']
         );
     }
@@ -68,11 +76,13 @@ class PilotBookRowDto
             null,
             DateTime::createFromFormat('d-m-Y', $ulmBook[PilotBookFields::DATE]),
             $ulmBook[PilotBookFields::DEPARTURE_PLACE] === null ? null : Aerodromes::tryFrom($ulmBook[PilotBookFields::DEPARTURE_PLACE]),
-            Carbon::createFromTimeString($ulmBook[PilotBookFields::DEPARTURE_TIME]),
+            $ulmBook[PilotBookFields::DEPARTURE_TIME] !== null ? Carbon::createFromTimeString($ulmBook[PilotBookFields::DEPARTURE_TIME]) : null,
             $ulmBook[PilotBookFields::ARRIVAL_PLACE] === null ? null : Aerodromes::tryFrom($ulmBook[PilotBookFields::ARRIVAL_PLACE]),
-            Carbon::createFromTimeString($ulmBook[PilotBookFields::ARRIVAL_TIME]),
+            $ulmBook[PilotBookFields::ARRIVAL_TIME] !== null ? Carbon::createFromTimeString($ulmBook[PilotBookFields::ARRIVAL_TIME]) : null,
             $ulmBook[PilotBookFields::AIRCRAFT_MODEL],
             $ulmBook[PilotBookFields::AIRCRAFT_REGISTRATION],
+            $ulmBook[PilotBookFields::TOTAL_TIME_OF_FLIGHT] !== null ? Carbon::createFromTimeString($ulmBook[PilotBookFields::TOTAL_TIME_OF_FLIGHT]) : null,
+            $ulmBook[PilotBookFields::NAME_PIC],
             $ulmBook['errors'] === null ?  [] : json_decode($ulmBook['errors'])
         );
     }
@@ -92,30 +102,8 @@ class PilotBookRowDto
         return $this->departureTime === null ? null : Carbon::createFromTimeString($this->departureTime);
     }
 
-    public function getArrivalPlace(): ?Aerodromes
-    {
-        return Aerodromes::tryFrom($this->arrivalPlace)->value();
-    }
-
     public function getArrivalTime(): ?Carbon
     {
         return $this->arrivalTime === null ? null : Carbon::createFromTimeString($this->arrivalTime);
     }
-
-    public function getAircraftModel(): ?string
-    {
-        return $this->aircraftModel;
-    }
-
-    public function getAircraftRegistration(): ?string
-    {
-        return $this->aircraftRegistration;
-    }
-
-    public function getErrors(): ?array
-    {
-        return $this->errors;
-    }
-
-
 }

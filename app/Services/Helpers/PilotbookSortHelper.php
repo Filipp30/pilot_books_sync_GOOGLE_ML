@@ -3,29 +3,21 @@
 namespace App\Services\Helpers;
 
 use App\Repository\Dto\PilotBookRowDto;
-use App\Repository\Dto\PilotBookRowDtoFactory;
 use Illuminate\Support\Collection;
 
 class PilotbookSortHelper
 {
-    private PilotBookRowDtoFactory $pilotBookRowDtoFactory;
-
-    public function __construct(PilotBookRowDtoFactory $pilotBookRowDtoFactory)
-    {
-        $this->pilotBookRowDtoFactory = $pilotBookRowDtoFactory;
-    }
-
     /**
-     * Sort Google Document AI response:
+     * Sort array<PilotBookRowDto>:
      *            first by date
      *            then by arrivalTime or departureTime if arrivalTime is null
      *
-     * @param array $data
+     * @param array<PilotBookRowDto> $data
      * @return Collection<PilotBookRowDto>
      */
     public function sortDescByDateTime(array $data): Collection
     {
-        return collect(array_map(fn(array $data): PilotBookRowDto => $this->pilotBookRowDtoFactory->fromArray($data), $data))
+        return collect($data)
             ->sortBy(fn(PilotBookRowDto $dto) => $dto->getDate())  // By date
             ->groupBy('date')                              // Group by date for sorting by time
             ->map(fn ($group) => $group->sortBy(fn(PilotBookRowDto $dto) => $dto->getArrivalTime() ?? $dto->getDepartureTime()))

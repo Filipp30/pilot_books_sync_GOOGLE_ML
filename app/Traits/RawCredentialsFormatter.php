@@ -2,10 +2,12 @@
 
 namespace App\Traits;
 
+use App\Models\Enums\Aerodromes;
 use Carbon\Carbon;
 use DateTime;
+use Rexlabs\Enum\Enum;
 
-trait DateTimeFormatter
+trait RawCredentialsFormatter
 {
     /**
      * @param string $inputStringDate
@@ -44,6 +46,7 @@ trait DateTimeFormatter
         $inputStringTime = str_replace('/', ':', $inputStringTime);
         $inputStringTime = str_replace('.', ':', $inputStringTime);
         $inputStringTime = str_replace(',', ':', $inputStringTime);
+        $inputStringTime = str_replace(' ', ':', $inputStringTime);
 
         preg_match('/^(\d{2}):(\d{2})$/', $inputStringTime, $result);
         if (!empty($result)) {
@@ -59,5 +62,20 @@ trait DateTimeFormatter
         }
 
         return null;
+    }
+
+    /**
+     * @param string $inputStringAerodrome
+     * @return Enum<Aerodromes>|null
+     */
+    protected static function getAerodromeFromUnknownFormat(string $inputStringAerodrome): ?Enum
+    {
+        if (Aerodromes::tryFrom($inputStringAerodrome) == null) {
+            $onlyAlphabetic = strtoupper(preg_replace("/[^A-Za-z ]/", '', $inputStringAerodrome));
+
+            return Aerodromes::tryFrom($onlyAlphabetic);
+        }
+
+        return Aerodromes::tryFrom($inputStringAerodrome);
     }
 }

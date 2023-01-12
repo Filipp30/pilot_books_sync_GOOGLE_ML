@@ -16,8 +16,8 @@ class BookAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'document_url' => ['required', 'url'],
-            'type' => Rule::in(BookTypes::values()),
+            'file' => ['required', 'file'],
+            'type' => ['required', Rule::in(BookTypes::values())],
         ];
     }
 }

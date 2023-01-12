@@ -49,7 +49,8 @@ class UlmBookRepository
                 ->map(fn ($group) => $group->sortBy(fn($group) => $group['arrival_time']))
                 ->sortBy('date')
                 ->collapse()
-                ->map(fn(UlmBook $record): PilotBookRowDto => PilotBookRowDto::fromDomain($record));
+                ->map(fn(UlmBook $record): PilotBookRowDto => PilotBookRowDto::fromDomain($record))
+                ->reverse()->values();
         }
 
         throw new ModelNotFoundException();
@@ -65,6 +66,8 @@ class UlmBookRepository
             PilotBookFields::ARRIVAL_TIME => $dto->arrivalTime,
             PilotBookFields::AIRCRAFT_MODEL => $dto->aircraftModel,
             PilotBookFields::AIRCRAFT_REGISTRATION => $dto->aircraftRegistration,
+            PilotBookFields::TOTAL_TIME_OF_FLIGHT => $dto->totalTimeOfFlight,
+            PilotBookFields::NAME_PIC => $dto->namePic,
             'errors' => json_encode($dto->errors),
         ]);
     }

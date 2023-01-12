@@ -12,6 +12,8 @@ use Rexlabs\Enum\Enum;
  * @method static self ARRIVAL_TIME()
  * @method static self AIRCRAFT_MODEL()
  * @method static self AIRCRAFT_REGISTRATION()
+ * @method static self TOTAL_TIME_OF_FLIGHT()
+ * @method static self NAME_PIC()
  */
 
 class PilotBookFields extends Enum
@@ -23,4 +25,6 @@ class PilotBookFields extends Enum
     const ARRIVAL_TIME = 'arrival_time';
     const AIRCRAFT_MODEL = 'aircraft_model';
     const AIRCRAFT_REGISTRATION = 'aircraft_registration';
+    const TOTAL_TIME_OF_FLIGHT = 'total_time_of_flight';
+    const NAME_PIC = 'name_pic';
 }

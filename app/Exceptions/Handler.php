@@ -87,9 +87,18 @@ class Handler extends ExceptionHandler
             ], 404);
         }
 
-        return response()->json([
-            'message' => 'Server error. Contact development team: filipp-tts@outlook.com.',
-            'error' => parent::render($request, $e)
-        ], 500);
+        if ($e instanceof ProcessingPilotbookException) {
+            return response()->json([
+                'message' => 'Processing document exception: ' . $e->getMessage(),
+                'error' => $e->context()
+            ], 500);
+        }
+
+//        return response()->json([
+//            'message' => 'Server error. Contact development team: filipp-tts@outlook.com.',
+//            'error' => parent::render($request, $e)
+//        ], 500);
+
+        return parent::render($request, $e);
     }
 }
